@@ -1,1 +1,0 @@
-# Anime_Tracker-nestJS-reactJS-
