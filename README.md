@@ -83,4 +83,4 @@ docker compose logs -f
 ```
 
 👤 Author
-Omar Bougarne - [Your GitHub Profile](https://github.com/omarbougarne)
+Omar Bougarne - [My Profile](https://github.com/omarbougarne)
