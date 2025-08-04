@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: anime_tracker_api_dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - MongoDB_URI=mongodb://mongodb:27017/anime_tracker
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: pnpm run start:dev
+    depends_on:
+      - mongodb
+    networks:
+      - anime_tracker_network
+
+  mongodb:
+    image: mongo:7.0
+    container_name: anime_tracker_mongo_dev
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_dev:/data/db
+    networks:
+      - anime_tracker_network
+
+volumes:
+  mongodb_data_dev:
+
+
+networks:
+  anime_tracker_network:
+    driver: bridge
