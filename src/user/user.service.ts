@@ -3,6 +3,7 @@ import { UserRepository } from './repositories/user.repository';
 import { ApiResponse } from 'src/common/types/api-response.type';
 import { UserDocument } from './schema/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ApiResponse as ApiResponseDecorator } from '@nestjs/swagger';
 
 @Injectable()
 export class UserService {
@@ -72,6 +73,56 @@ export class UserService {
                 message: 'Failed to create user'
             };
         }
+    }
+
+    async update(id: string, updateUserDto: Partial<UserDocument>): ApiResponse<UserDocument> {
+        try {
+            const existingUser = await this.userRepository.findById(id);
+            if (!existingUser) {
+                return {
+                    success: false,
+                    message: `User With ID ${id} not found`
+                };
+            }
+            const updateUser = await this.userRepository.update(id, updateUserDto);
+            return {
+                success: true,
+                data: updateUser,
+                message: 'User Updated Successfully'
+            }
+        } catch (error) {
+            return {
+                success: false,
+                error: error.message,
+                message: 'Failed to Update user'
+            };
+        }
+    }
+
+    async delete(id: string): ApiResponse<UserDocument> {
+        try {
+            const deletedUser = await this.userRepository.delete(id);
+
+            if (!deletedUser) {
+                return {
+                    success: false,
+                    message: `User with ID ${id} not found`
+                };
+            }
+
+            return {
+                success: true,
+                data: deletedUser,
+                message: 'User deleted successfully'
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.message,
+                message: 'Failed to delete user'
+            };
+        }
+
     }
 
 }
