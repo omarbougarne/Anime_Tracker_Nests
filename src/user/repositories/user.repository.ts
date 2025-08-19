@@ -22,7 +22,7 @@ export class UserRepository {
         return this.userModel.findOne({ userName }).exec();
     }
 
-    async create(createUserDto: CreateUserDto): Promise<UserDocument> {
+    async create(createUserDto: Partial<UserDocument>): Promise<UserDocument> {
         const newUser = new this.userModel(createUserDto);
         return newUser.save()
     }
