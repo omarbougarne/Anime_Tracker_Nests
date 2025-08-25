@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserRepository } from 'src/user/repositories/user.repository';
+import { UserRepository } from '../user/repositories/user.repository';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { ApiResponse } from 'src/common/types/api-response.type';
 import * as bcrypt from 'bcryptjs'
@@ -13,13 +13,13 @@ export class AuthService {
         private jwtService: JwtService,
     ) { }
 
-    async register(registerDto: RegisterUserDto): ApiResponse<{ access_token, newUser: any }> {
+    async register(registerDto: RegisterUserDto): ApiResponse<{ access_token, user: any }> {
         try {
             const existingUser = await this.userRepository.findByUserName(registerDto.userName)
             if (existingUser) {
                 return {
                     success: false,
-                    message: 'User Name Already Exists'
+                    message: 'Username already exists'
                 };
             }
 
@@ -36,7 +36,7 @@ export class AuthService {
             const access_token = this.jwtService.sign(payload);
             return {
                 success: true,
-                data: { access_token, newUser },
+                data: { access_token, user: newUser },
                 message: 'User registered successfully'
             }
         } catch (error) {
