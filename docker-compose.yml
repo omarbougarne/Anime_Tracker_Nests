@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   api:
     build:
@@ -30,7 +29,6 @@ services:
 
 volumes:
   mongodb_data:
-
 
 networks:
   anime_tracker_network:

@@ -1,26 +1,23 @@
-# Base image
-FROM node:20-alpine
+FROM node:20-alpine AS builder
 
-# Create app directory
 WORKDIR /usr/src/app
 
-# Install pnpm
-RUN npm install -g pnpm
+COPY package*.json ./
+RUN npm ci
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
-
-# Install dependencies
-RUN pnpm install
-
-# Copy app source
 COPY . .
+RUN npm run build
 
-# Build application
-RUN pnpm run build
+# Production
+FROM node:20-alpine
 
-# Expose port
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY --from=builder /usr/src/app/dist ./dist
+
 EXPOSE 3000
 
-# Start the application
-CMD ["pnpm", "run", "start:prod"]
+CMD ["node", "dist/main.js"]

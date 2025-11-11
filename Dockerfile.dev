@@ -1,11 +1,17 @@
-FROM node:20-alpine
+FROM oven/bun:1
 
 WORKDIR /usr/src/app
 
-RUN npm install -g pnpm
+# Copy package files
+COPY package.json bun.lockb* ./
 
-COPY package.json pnpm-lock.yaml ./
+# Install dependencies with Bun
+RUN bun install
 
-RUN pnpm install
+# Copy source code
+COPY . .
 
 EXPOSE 3000
+
+# Run with Bun (not node!)
+CMD ["bun", "run", "start:dev"]
